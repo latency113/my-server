@@ -11,7 +11,7 @@ app.get('/:id', controller.getById)
 
 app.get('/name/:name', controller.getName)
 app.post('/', controller.create)
-app.put('/:id', controller.create)
+app.put('/:id', controller.getById)
 app.patch('/:id', controller.patch)
 app.delete('/:id', controller.rmCustomer)
 
