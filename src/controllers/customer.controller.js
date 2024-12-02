@@ -11,7 +11,7 @@ exports.create = (req,res)=>{
     res.send("New customer");
 }
 exports.getById = (req,res)=>{
-    res.send("Customers ID:" + req.params.id);
+    res.send("Edit Customers ID:" + req.params.id);
 }
 exports.patch = (req,res)=>{
     res.send("Patch customers ID:" + req.params.id);
