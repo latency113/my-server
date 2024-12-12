@@ -25,7 +25,7 @@ exports.getById = async (req, res) => {
 
     res.json(product);
   } catch (error) {
-    req.json(error);
+    res.json(error);
   }
 };
 exports.create = async (req, res) => {
@@ -81,3 +81,66 @@ exports.delete = async (req, res) => {
     res.json(error);
   }
 };
+
+exports.orderBy = async (req,res) => {
+  try {
+    const {sort,order,limit} = req.body
+    const product = await prisma.product.findMany({
+      take: limit,
+      orderBy:{[sort]:order},
+      include:{Category: true}
+    })
+    res.json(product)
+  } catch (error) {
+    res.json(error)
+  }
+}
+
+
+exports.filter = async (req,res) => {
+  try {
+    const { query, category, price} = req.body
+    if(query){
+      const products = await prisma.product.findMany({
+        where:{
+          name:{
+            contains:query,
+          }
+        },
+        include:{
+          Category:true
+        }
+      })
+      res.json(products)
+    }
+    if(category && Array.isArray(category)){
+      const products = await prisma.product.findMany({
+        where:{
+          category_id:{
+            in: category.map((id)=> Number(id))
+          }
+        },
+        include:{
+          Category:true
+        }
+      })
+      res.json(products)
+    }
+    if(price && Array.isArray(price) && price.length === 2) {
+      const products = await prisma.product.findMany({
+        where:{
+          price:{
+            gte: price[0],
+            lte: price[1]
+          }
+        },
+        include:{
+          Category:true
+        }
+      })
+      res.json(products)
+    }
+  } catch (error) {
+    res.json("Server Error")
+  }
+}
